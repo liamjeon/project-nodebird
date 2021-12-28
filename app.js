@@ -11,6 +11,8 @@ const {sequelize} = require('./models');
 dotenv.config(); //상단에서 호출하는 것이 좋음
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post.js');
+const userRouter = require('./routes/user.js');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -48,6 +50,8 @@ app.use(passport.session()); //req.session에 passport 정보 저장, passport.d
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
+app.use('/post', postRouter);
+app.use('/user', userRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다`);
