@@ -9,7 +9,8 @@ const passport = require('passport');
 const {sequelize} = require('./models');
 
 dotenv.config(); //상단에서 호출하는 것이 좋음
-const pageRouter = require("./routes/page.js");
+const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -43,9 +44,10 @@ app.use(
   })
 );
 app.use(passport.initialize()); //req 에 passport 설정 넣음
-app.use(passport.session()); //req.session에 passport 정보 저장
+app.use(passport.session()); //req.session에 passport 정보 저장, passport.deserializeUser 호출
 
-app.use("/", pageRouter);
+app.use('/', pageRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다`);

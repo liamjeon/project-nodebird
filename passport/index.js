@@ -1,7 +1,7 @@
 const passport = require("passport");
 const local = require("./localStrategy");
 const kakao = require("./kakaoStrategy");
-const { User } = require("/models");
+const { User } = require("../models");
 
 module.exports = () => {
     //로그인시 실행되며 req.session 객체에 어떤 데이터를 저장할지 결정한다.

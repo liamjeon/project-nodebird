@@ -8,22 +8,28 @@ const router = express.Router();
 
 router.post("/join", isNotLoggedIn, async (req, res, next) => {
   const { email, nick, password } = req.body;
+  console.log(email, nick, password);
   try {
     const exUser = await User.findOne({ where: { email } });
+    console.log(exUser);
     if (exUser) {
       return res.redirect("/join?error=exist");
     }
-    const hash = await bcrypt.hash(password, 10);
-    await User.create({ email, nick, password: hash });
+    const hash = await bcrypt.hash(password, 12);
+    await User.create({
+      email,
+      nick,
+      password: hash,
+    });
     return res.redirect("/");
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next(error);
   }
 });
 
 router.post("/login", isNotLoggedIn, (req, res, next) => {
-    //passport.authenticate : 미들웨어
+  //passport.authenticate : 미들웨어
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -32,7 +38,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
     if (!user) {
       return res.redirect(`/?loginError=${info.message}`);
     }
-    //passport는 req 객체에 req.login/logout을 추가함. 
+    //passport는 req 객체에 req.login/logout을 추가함.
     //req.login은 passport.serializeUser를 호출함.
     //req.loin에 제공하는 user 객체가 serializeUser로 넘어감
     return req.login(user, (loginError) => {
